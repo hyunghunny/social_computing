@@ -34,9 +34,11 @@ def create_graph(data):
 ##
 # page rank algorithm (old)
 # @brief this version excerpted from the lecture slide
+# @param graph the graph to be page-ranked
+# @param k the steps
 # @return the ranking dictionary
 #
-def calculate_page_ranks_old(graph):
+def calculate_page_ranks_old(graph, k=10):
     # Assign initial values
     ranks = dict()
     V = float(len(graph))
@@ -45,7 +47,7 @@ def calculate_page_ranks_old(graph):
     for key, node in graph.nodes(data=True):
         ranks[key] = node.get('rank')
 
-    for _ in range(10):
+    for _ in range(k):
         for key, node in graph.nodes(data=True):
             rank_sum = 0.0
             curr_rank = node.get('rank')
@@ -61,9 +63,10 @@ def calculate_page_ranks_old(graph):
 # fixed page rank algorithm (new)
 # @brief this version excerpted from the notice by prof.
 # @param graph the graph to be page-ranked
+# @param k the steps
 # @return the ranking dictionary
 #
-def calculate_page_ranks_new(graph):
+def calculate_page_ranks_new(graph, k=10):
     # Assign initial values
     ranks = dict()
     V = float(len(graph))
@@ -72,7 +75,7 @@ def calculate_page_ranks_new(graph):
     for key, node in graph.nodes(data=True):
         ranks[key] = node.get('rank')
 
-    for _ in range(10):
+    for _ in range(k):
         for key, node in graph.nodes(data=True):
             rank_sum = 0.0
             curr_rank = node.get('rank')
@@ -107,16 +110,25 @@ import networkx as nx, operator
 #csv_data = 'lesmis'
 csv_data = 'dolphins'
 
+steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 50, 100]
+messages = ['# PageRanking for ' + csv_data, '', '*Followings show the ranking changes when the step k is increased.*', '']
+for step in steps:
+    graph = create_graph(csv_data)
+    ranks = calculate_page_ranks_new(graph, step)
 
-graph = create_graph(csv_data)
-ranks = calculate_page_ranks_new(graph)
+    sorted_ranks = sorted(ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
+    messages.append('## Step ' + str(step) + '\n')
+    messages.append('|\tName\t|\tPageRank Score\t|')
+    messages.append('|------------|------------|')
+    for tuple in sorted_ranks:
+        line = '|\t' + tuple[0] + '\t|\t' + str(tuple[1]) + '\t|'
+        messages.append(line)
+    messages.append('\n')
 
-sorted_ranks = sorted(ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
 
-# print out the results
-f = file(csv_data +'.txt', 'w')
-for tuple in sorted_ranks:
-    line = tuple[0] + '\t' + str(tuple[1]) + '\n'
-    f.write(line)
+# print out the results into file
+f = file(csv_data +'.md', 'w')
+for message in messages:
+    f.write(message + '\n')
 f.close()
 
