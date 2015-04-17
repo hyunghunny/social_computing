@@ -11,7 +11,7 @@
 
     .node text {
       pointer-events: none;
-      font: 10px sans-serif;
+      font: sans-serif;
     }
 
     </style>
@@ -24,8 +24,8 @@
 
 <script>
 
-var width = 1200,
-    height = 900,
+var width = window.innerWidth - 20 || document.body.clientWidth - 20,
+    height = window.innerHeight - 20 || document.body.clientHeight - 20,
     fill = d3.scale.category20();
 
 var zoom = d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed);
@@ -36,7 +36,7 @@ var svg = d3.select("body").append("svg")
     .append("g")
     .call(zoom)
     .append("g");
-    
+
 function zoomed() {
     svg.attr("transform",
         "translate(" + zoom.translate() + ")" +
@@ -118,12 +118,13 @@ d3.json("force2.json", function(json) {
   node.append("circle")
       //.attr("r", 5)
       .attr("r", function(d) { return d.size;})
-      .style("fill", function(d) { return color(d.id == "me" ? 1 : 2); });
+      .style("fill", function(d) { return (d.name ? d3.rgb('red').brighter(100) : color(0)); } ); // d3.rgb('red')
 
   node.append("text")
       .attr("dx", 12)
       .attr("dy", ".35em")
-      .text(function(d) { return d.id });
+      .attr("font-size", function(d) { var size = d.size; return size.toString() +"px"; })
+      .text(function(d) { return d.name });
       //.text(function(d) { return d.id + d.rank });
 
   force.on("tick", function() {
@@ -131,7 +132,7 @@ d3.json("force2.json", function(json) {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; })
-        .style("stroke-width", function(d) { return Math.sqrt(d.weight); });
+        .style("stroke-width", function(d) { return Math.sqrt(d.weight*20); });
 
 
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });

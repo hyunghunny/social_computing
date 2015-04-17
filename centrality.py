@@ -46,38 +46,89 @@ data = [row for row in reader]
 nodes = set([row[0] for row in data])
 nodes.update([row[2] for row in data])
 
-edges = [(row[0], row[1], row[2]) for row in data] # edge의 weight가 두번째 column에 들어있다
+edges = [(row[0], row[1], row[2]) for row in data]
 
 
 num_nodes = len(nodes)
 rank = 1/float(num_nodes)
 
-# what is affected by size? -> no effect, why?
-#graph.add_nodes_from(nodes, rank=rank, size=3)
-graph.add_nodes_from(nodes, rank=rank, size=10)
+# preset node
+graph.add_nodes_from(nodes, rank=rank, name='', degree=0, closeness=0,  betweenness=0, eigenvector=0, size=10)
 
 # adding different weight for each edges
-#graph.add_edges_from(edges, weight=1)
 for source, weight, target in edges:
     graph.add_edge(source, target, weight=weight)
 
 ranks = dict()
 V = float(len(graph))
-MIN_NODE_SIZE = 5.0
+
+
 
 # rank node with PageRank algorithm
-ranks = rank_nodes(graph);
+ranks = rank_nodes(graph)
+
+#  metrics
+import operator
+# print top tankers by PageRank
+print sorted(ranks.items(), key=operator.itemgetter(1), reverse=True)
+
+degree_centralities = nx.degree_centrality(graph)
+# print top ranker by degree
+print sorted(degree_centralities.items(), key=operator.itemgetter(1), reverse=True)
+
+closeness_centralities = nx.closeness_centrality(graph)
+# print top ranker by closeness
+print sorted(closeness_centralities.items(), key=operator.itemgetter(1), reverse=True)
+
+betweenness_centralities = nx.betweenness_centrality(graph)
+# print top ranker by betweenness
+print sorted(betweenness_centralities.items(), key=operator.itemgetter(1), reverse=True)
+
+eigenvector_centralities = nx.eigenvector_centrality(graph)
+# print top ranker by eigenvector
+print sorted(eigenvector_centralities.items(), key=operator.itemgetter(1), reverse=True)
+
+node_to_remove = []
+hall_of_fame = [] # for honorable members
+
+MIN_NODE_SIZE = 2.0
+MIN_BADGE_NODE_SIZE = 20.0 # show name if the node size exceeds it
 
 for key, node in graph.nodes(data=True):
     rank = graph.node[key]['rank']
+    name = graph.node[key]['name']
+
+    degree = degree_centralities[key]
+    closeness = closeness_centralities[key]
+    betweenness = betweenness_centralities[key]
+    eigenvector = eigenvector_centralities[key]
+
+    graph.node[key]['degree'] = degree
+    graph.node[key]['closeness'] = closeness
+    graph.node[key]['betweenness'] = betweenness
+    graph.node[key]['eigenvector'] = eigenvector
+
+    # set criteria e.g. rank, degree, closeness, betweenness, eigenvector
+    criteria = betweenness * V / 2
+    # remove node if the guy is not so remarkable
+    if (round(MIN_NODE_SIZE * criteria) < round(MIN_NODE_SIZE)) :
+        #print (key + " is not so remarkable. The rank: " + str(rank))
+        node_to_remove.append(key)
+
     # below code resize the node size
-    print(round(MIN_NODE_SIZE * rank * V))
-    graph.node[key]['size'] = max(round(MIN_NODE_SIZE), round(MIN_NODE_SIZE * rank * V))
+    size = max(round(MIN_NODE_SIZE), round(MIN_NODE_SIZE * criteria))
+    graph.node[key]['size'] = size
+
+    # if node is honorable, set badge name
+    if (size > MIN_BADGE_NODE_SIZE) :
+        # print (key + ' get badge with score ' + str(rank))
+        graph.node[key]['name'] = key
+        hall_of_fame.append(graph.node[key])
 
 
-node_to_remove = []
 for key, rank in ranks.iteritems():
     if rank < 1.0 / V: # PageRank가 처음보다 작아지면
+       # print (key + ' is banned.')
         node_to_remove.append(key)
 graph.remove_nodes_from(node_to_remove)
 
@@ -85,3 +136,11 @@ jgraph = json_graph.node_link_data(graph)
 
 import json
 json.dump(jgraph, open('force2.json','w'))
+
+# show honors in hall of frame with ascending order
+def getKey(item) :
+    return item['rank']
+idx = 1
+for honor in sorted(hall_of_fame, key=getKey, reverse=True) :
+    # print str(idx) + '. ' + honor['name'] + ': ' + str(honor['rank'])
+    idx = idx + 1
