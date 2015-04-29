@@ -1,6 +1,12 @@
 # coding=UTF-8
+##
+# Distance algorithms
+# @author webofthink@snu.ac.kr
+#
 from math import sqrt
+import numpy as np
 
+# euclidean distance
 def euclidean(v1, v2):
     sumSq = 0.0
     for i in range(len(v1)):
@@ -9,6 +15,8 @@ def euclidean(v1, v2):
     distance = sqrt(sumSq)
     return distance
 
+
+# tanimoto distance
 def tanimoto(v1, v2):
     c1 = 0
     c2 = 0
@@ -22,6 +30,7 @@ def tanimoto(v1, v2):
             shared += 1
     return 1.0 - float(shared) / (c1 + c2 - shared)
 
+# pearson distance
 def pearson(v1, v2):
 
     # Simple sums
@@ -56,8 +65,21 @@ def pearson(v1, v2):
     return 1.0 - numerator / denominator
 
 
-# TODO:Hamming Distance
+# Haming distance - Count the # of differences between equal length strings str1 and str2"""
+def hamdist(str1, str2):
+    diffs = 0
+    for ch1, ch2 in zip(str1, str2):
+            if ch1 != ch2:
+                    diffs += 1
+    return diffs
 
-# TODO:Kullback-Leibler distance
 
-# TODO:Manhattan distance
+# Kullback-Leibler distance
+def kl(p, q):
+    p = np.asarray(p, dtype=np.float)
+    q = np.asarray(q, dtype=np.float)
+    return np.sum(np.where(p != 0,(p-q) * np.log10(p / q), 0))
+
+# Manhattan distance
+def manhattan(xList,yList):
+    return float(xList[0]-xList[1]) + abs(yList[0]-yList[1])
