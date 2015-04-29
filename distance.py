@@ -23,6 +23,7 @@ def tanimoto(v1, v2):
     return 1.0 - float(shared) / (c1 + c2 - shared)
 
 def pearson(v1, v2):
+
     # Simple sums
     sum1 = sum(v1)
     sum2 = sum(v2)
@@ -51,6 +52,7 @@ def pearson(v1, v2):
 
     if denominator == 0:
         return 0
+
     return 1.0 - numerator / denominator
 
 
