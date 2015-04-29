@@ -1,5 +1,10 @@
 # coding=UTF-8
-
+##
+# TSV data loader
+#
+# @author webofthink@snu.ac.kr
+#
+#
 class TSVDataLoader :
     def __init__(self, fileName) :
 

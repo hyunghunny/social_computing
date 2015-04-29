@@ -16,7 +16,7 @@ from distance import manhattan
 
 
 
-def getGroups(cluster) :
+def getWordsGroups(cluster) :
     groups = []
     for c in cluster:
         words = []
@@ -26,7 +26,7 @@ def getGroups(cluster) :
     return groups
 
 
-def selectGroups(groups) :
+def selectAppleGoogleWordGroups(groups) :
     selected_groups = []
     for words in groups:
         #print words
@@ -59,8 +59,8 @@ report = {}
 
 for key in distances:
     cluster = kcluster(dataLoader.data, distances[key], 10)
-    groups = getGroups(cluster)
-    report[key] = selectGroups(groups)
+    groups = getWordsGroups(cluster)
+    report[key] = selectAppleGoogleWordGroups(groups)
 
 for key in report :
     print key
