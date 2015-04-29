@@ -23,11 +23,11 @@ from distance import hamdist
 from distance import kl
 from distance import manhattan
 
-from dataloader import JSONDataLoader
+from dataloader import TSVDataLoader
 
 
 # Simple test
-dataLoader = JSONDataLoader('zebo.txt')
+dataLoader = TSVDataLoader('zebo.txt')
 print dataLoader.names
 cluster = hcluster(dataLoader.data, manhattan)
 printclust(cluster, dataLoader.names)

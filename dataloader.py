@@ -1,6 +1,6 @@
 # coding=UTF-8
 
-class JSONDataLoader :
+class TSVDataLoader :
     def __init__(self, fileName) :
 
         self.lines = [line for line in file(fileName)]
