@@ -22,7 +22,7 @@ from dataloader import TSVDataLoader
 # Simple test
 dataLoader = TSVDataLoader('blogdata.txt')
 print dataLoader.names
-cluster = hcluster(dataLoader.data, manhattan)
+cluster = hcluster(dataLoader.data, tanimoto)
 printclust(cluster, dataLoader.names)
 
 f = open('dendrogram.json', 'w')

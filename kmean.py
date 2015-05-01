@@ -42,7 +42,7 @@ def selectAppleGoogleWordGroups(groups) :
     return selected_groups
 
 # pivot blogdata.txt to transpose.txt
-#transpose('blogdata.txt', 'transpose.txt')
+transpose('blogdata.txt', 'transpose.txt')
 
 distances = { 'Euclidean distance':  euclidean,
               'Tanimoto distance' : tanimoto,
@@ -52,9 +52,8 @@ distances = { 'Euclidean distance':  euclidean,
               'Manhattan distance' :manhattan
               }
 
-# distances = { 'Pearson distance': pearson }
 dataLoader = TSVDataLoader('transpose.txt')
-#print dataLoader.names
+
 report = {}
 
 for key in distances:

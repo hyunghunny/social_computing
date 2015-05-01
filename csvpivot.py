@@ -8,7 +8,7 @@ from csv import reader, writer
 import os
 
 ##
-# Pivot CSV file
+# Pivot TSV file
 # source snippet from http://stackoverflow.com/questions/4869189/how-to-pivot-data-in-a-csv-file
 #
 def transpose(src, dest):
