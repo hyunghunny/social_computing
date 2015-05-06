@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Force-Directed Layout</title>
+    <script type="text/javascript" src="http://d3js.org/d3.v2.min.js?2.9.3"></script>
+    <style>
+
+    .link {
+      stroke: #ccc;
+    }
+
+    .node text {
+      pointer-events: none;
+      font: sans-serif;
+    }
+
+    </style>
+  </head>
+  <body>
+  
+<button id="zoom_in">+</button>
+<button id="zoom_out">-</button>
+<div id="chart"></div>
+
+<script>
+
+var width = window.innerWidth - 20 || document.body.clientWidth - 20,
+    height = window.innerHeight - 20 || document.body.clientHeight - 20,
+    fill = d3.scale.category20();
+
+var zoom = d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed);
+   
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .call(zoom)
+    .append("g");
+
+function zoomed() {
+    svg.attr("transform",
+        "translate(" + zoom.translate() + ")" +
+        "scale(" + zoom.scale() + ")"
+    );
+}
+
+function interpolateZoom (translate, scale) {
+    var self = this;
+    return d3.transition().duration(350).tween("zoom", function () {
+        var iTranslate = d3.interpolate(zoom.translate(), translate),
+            iScale = d3.interpolate(zoom.scale(), scale);
+        return function (t) {
+            zoom
+                .scale(iScale(t))
+                .translate(iTranslate(t));
+            zoomed();
+        };
+    });
+}
+
+function zoomClick() {
+    var clicked = d3.event.target,
+        direction = 1,
+        factor = 0.2,
+        target_zoom = 1,
+        center = [width / 2, height / 2],
+        extent = zoom.scaleExtent(),
+        translate = zoom.translate(),
+        translate0 = [],
+        l = [],
+        view = {x: translate[0], y: translate[1], k: zoom.scale()};
+
+    d3.event.preventDefault();
+    direction = (this.id === 'zoom_in') ? 1 : -1;
+    target_zoom = zoom.scale() * (1 + factor * direction);
+
+    if (target_zoom < extent[0] || target_zoom > extent[1]) { return false; }
+
+    translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
+    view.k = target_zoom;
+    l = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y];
+
+    view.x += center[0] - l[0];
+    view.y += center[1] - l[1];
+
+    interpolateZoom([view.x, view.y], view.k);
+}
+
+d3.selectAll('button').on('click', zoomClick);
+
+
+var force = d3.layout.force()
+    .gravity(.05)
+    .distance(150)
+    .charge(-100)
+    .size([width, height]);
+
+d3.json("force2.json", function(json) {
+  force
+      .nodes(json.nodes)
+      .links(json.links)
+      .linkDistance(function(d) { return (100.0 / (Math.sqrt(d.weight)+1)); })
+      .start();
+
+  var link = svg.selectAll(".link")
+      .data(json.links)
+      .enter().append("line")
+      .attr("class", "link");
+
+  var color = d3.scale.category20();
+
+  var node = svg.selectAll(".node")
+      .data(json.nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
+
+  node.append("circle")
+      //.attr("r", 5)
+      .attr("r", function(d) { return d.size;})
+      .style("fill", function(d) { return (d.name ? d3.rgb('red').brighter(100) : color(0)); } ); // d3.rgb('red')
+
+  node.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .attr("font-size", function(d) { var size = d.size; return size.toString() +"px"; })
+      .text(function(d) { return d.name });
+      //.text(function(d) { return d.id + d.rank });
+
+  force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+        .style("stroke-width", function(d) { return Math.sqrt(d.weight*20); });
+
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  });
+  
+  
+  
+});
+
+</script>
+
+  </body>
+</html>
