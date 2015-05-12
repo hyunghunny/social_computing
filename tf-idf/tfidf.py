@@ -136,7 +136,7 @@ def getRelevantActivities(dataset, terms) :
             relevant_activities.append({
                 'score': score,
                 'author': dataset[idx]['author'],
-                'filepath': dataset[idx]['filepath']
+                'filename': dataset[idx]['filename']
             })
     return relevant_activities
 
@@ -151,6 +151,15 @@ def print10RelevantActivities(relevant_activities) :
         print '\tScore: %s' % (activity['score'], )
         print
 
+def tsv10RelevantActivities(relevant_activities, topic) :
+    # Sort by score and display results
+    relevant_activities = sorted(relevant_activities, key=lambda p: p['score'], reverse=True)
+    headers = 'Topics\tAuthor\tFile\tScore'
+    print headers
+
+    for activity in relevant_activities[:10]:
+        print str(topic) + '\t' + activity['author'] + '\t' + activity['filename'] + '\t' + str(activity['score'])
+
 
 # Reuter data set중 C50train 디렉토리에 있는 2500개의 기사들 중에
 # 다음 query에 대하여 tf-idf 값이 높은 상위 10개의 기사를 찾아서 각각 리스트를 제출하세요
@@ -161,12 +170,11 @@ print len(dataset)
 #inspectDataSet(dataset)
 activities = getRelevantActivities(dataset, topics)
 print "For all 4 topics, top 10 articles are as below: "
-print10RelevantActivities(activities)
+tsv10RelevantActivities(activities, "all")
 print "***************************************************"
 
 for topic in topics :
     print "For " + topic + "'s top 10 articles are as below: "
-    queries = [ topic ]
-    activities = getRelevantActivities(dataset, queries)
-    print10RelevantActivities(activities)
+    activities = getRelevantActivities(dataset, topic)
+    tsv10RelevantActivities(activities, topic)
     print "***************************************************"
