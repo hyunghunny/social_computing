@@ -10,10 +10,11 @@ from nltk.corpus import movie_reviews
 
 
 def printReviewInfo(file) :
-    print movie_reviews.categories(file)
-    print movie_reviews.words(file)
+    print 'Category: ' + str(movie_reviews.categories(file))
+    print 'Words in '+ file + ': ' + str(movie_reviews.words(file))
 
 def getDocuments() :
+
     documents = [(list(movie_reviews.words(fileid)), category)
                  for category in movie_reviews.categories()
                  for fileid in movie_reviews.fileids(category)]
@@ -33,24 +34,34 @@ def document_features(document):
 # Simple Test
 
 file_ids = movie_reviews.fileids()
-file = file_ids[0]
-#printReviewInfo(file)
+#file = file_ids[0]
+file ='pos/cv995_21821.txt'
+printReviewInfo(file)
 
 all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
-word_features = all_words.keys()[:600]
+word_features = all_words.keys()[:2000]
+
+print '10 features in words '
+for feature in word_features[:10] :
+    print feature
+print ''
 
 documents = getDocuments()
 featuresets = [(document_features(d), c)for (d,c) in documents]
+#print len(featuresets)
 train_set = featuresets[100:]
 test_set = featuresets[:100]
-
-
+print 'Number of training set: ' + str(len(train_set))
+print 'Number of test set: ' +str(len(test_set))
 
 
 classifier = nltk.NaiveBayesClassifier.train(train_set)
-print nltk.classify.accuracy(classifier, test_set)
+accuracy = nltk.classify.accuracy(classifier, test_set)
+print "classification accuracy: " + str(accuracy)
 classifier.show_most_informative_features(5)
 
+
+# Classification Tree
 gold = [tag for (features, tag) in test_set]
 test = [classifier.classify(features) for features, tag in test_set]
 cm = nltk.ConfusionMatrix(gold, test)
