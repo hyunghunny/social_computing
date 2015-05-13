@@ -79,12 +79,14 @@ def getStemmedList(tokens) :
     return stemmed
 
 
-def getDocumentFeatures(document):
-	document_words = set(document)
-	features = {}
-	for word in word_features:
-		features['contains(%s)' % word] = (word in document_words)
-	return features
+def getDocumentFeatures(document, word_features):
+    document_words = set(document)
+    features = {}
+
+    for word in word_features:
+        features['contains(%s)' % word] = (word in document_words)
+
+    return features
 
 
 def getLabeledArticles(dataset) :
@@ -94,8 +96,9 @@ def getLabeledArticles(dataset) :
     random.shuffle(all_pairs)
     return all_pairs
 
-def getFeatureSets(names, features):
-    feature_sets = [ (features(n), g) for (n, g) in names ]
+def getFeatureSets(articles, word_features, func):
+
+    feature_sets = [ (func(n, word_features), g) for (n, g) in articles ]
     return feature_sets
 
 
@@ -104,7 +107,7 @@ def getNaiveBayesClassifier(train_set) :
     return classifier
 
 
-def getAllWords(dataset) :
+def getWords(dataset) :
     words_list = []
     for doc in dataset :
         all_content = " ".join(doc['stemmed_text'])
@@ -116,11 +119,9 @@ def getAllWords(dataset) :
         words = [w for w in fdist.keys() \
             if w.lower() not in nltk.corpus.stopwords.words('english')]
 
-        # Long words that aren't URLs
-        # [w for w in fdist.keys() if len(w) > 15 and not w.startswith("http")]
-
         for word in words :
             words_list.append(word)
+
 
     all_words = nltk.FreqDist(w.lower() for w in words_list)
 
@@ -132,34 +133,31 @@ authors = ['AaronPressman', 'AlanCrosby', 'AlexanderSmith', 'BenjaminKangLim', '
 # get data set of 5 authors which are sorted with ascending order
 train_dataset = loadReuterDataSet("train", authors)
 test_dataset = loadReuterDataSet("test", authors)
-addStemmedText(train_dataset) # add a "stemmed_text" property which is stemmed
+
+# add a "stemmed_text" property which is stemmed
+addStemmedText(train_dataset)
 addStemmedText(test_dataset)
 
 # get all stemmed words in the data set
-all_words = getAllWords(train_dataset)
-print "Number of all words: " + str(len(all_words))
-word_features = all_words.keys()[:100]
-
-# show word list
-#for feature in word_features :
-#    print feature[:50]
+all_words = getWords(train_dataset)
+print "Number of word features: " + str(len(all_words))
 
 train_pairs = getLabeledArticles(train_dataset) # labeling with author name
 test_pairs = getLabeledArticles(test_dataset) # labeling with author name
 
-#for pair in  train_pairs:
-#    print pair[1]
 
-print "Number of pairs: " + str(len(train_pairs))
-
-
-train_feature_sets = getFeatureSets(train_pairs, getDocumentFeatures)
-test_feature_sets = getFeatureSets(test_pairs, getDocumentFeatures)
+print 'selecting 5000 sorted features'
+unsorted_word_features = all_words.keys()[:5000]
+sorted_word_features = nltk.FreqDist( w[0] \
+                                      for w in all_words.most_common(5000))
+word_features = unsorted_word_features
+train_feature_sets = getFeatureSets(train_pairs, word_features, getDocumentFeatures)
+test_feature_sets = getFeatureSets(test_pairs, word_features, getDocumentFeatures)
 
 train_set = train_feature_sets
-print len(train_set)
+print "Number of training set: " + str(len(train_set))
 test_set = test_feature_sets
-print len(test_set)
+print "Number of test set: " + str(len(test_set))
 
 # learn with Naive Bayesian Classifier
 classifier = nltk.NaiveBayesClassifier.train(train_set)
