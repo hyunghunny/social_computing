@@ -4,11 +4,10 @@
 # @author webofthink@snu.ac.kr
 #
 
+import nltk
+
 from car import Car
 from car import read_csv_data
-
-import nltk
-import random
 
 
 def loadCarList(path) :
@@ -16,10 +15,14 @@ def loadCarList(path) :
     #print len(car_data_list)
     car_list = []
     for car_data in car_data_list :
+
         if (len(car_data) == 7) :
-            car = Car(car_data)
-            #print car.price()
-            car_list.append(car)
+            if (car_data[6].find('unacc') < 0): # XXX: surpass when classification is unacc
+                car = Car(car_data)
+                #print car.price()
+                car_list.append(car)
+        else:
+            print car_data
     #print len(car_list)
 
     return car_list
@@ -51,6 +54,7 @@ def getPriceFeatures(car) :
 
     return features
 
+
 def getTechFeatures(car) :
     features = {}
     features['doors'] = car._doors
@@ -60,62 +64,73 @@ def getTechFeatures(car) :
 
     return features
 
+
+def n_fold_cv(n, feature_sets, func) :
+    print '---------------------------------------------------'
+
+    feature_sets_size = len(feature_sets)
+    print "total data set: " + str(feature_sets_size)
+
+    accuracies = []
+
+    # print 'test set size: ' + str(test_length)
+    # randomKey = random.randrange(0, n) # select random value
+    test_set_size = int(round(feature_sets_size / n))
+
+    for step in range(0, n) :
+
+        train_set = []
+        test_set = []
+
+        print str(n) + '-fold cross validation: ' + str(step)
+        idx = 0
+        for feature in feature_sets:
+
+            if (idx >= (step * test_set_size)) and (idx < (step * test_set_size) + test_set_size):
+                test_set.append(feature)
+            else:
+                train_set.append(feature)
+            idx = idx + 1
+
+        print "number of training sets: " + str(len(train_set))
+        print "number of test sets: " + str(len(test_set))
+
+        accuracy = func(train_set, test_set)
+        accuracies.append(accuracy)
+
+        print '---------------------------------------------------'
+
+    # print average accuracy
+    accuracy_sum = 0.0
+    for accuracy in accuracies:
+        accuracy_sum = accuracy_sum + accuracy
+
+    avg_accuracy = (accuracy_sum / len(accuracies))
+    print "average accuracy: " + str(avg_accuracy)
+
+def runDecisionTree(train_set, test_set) :
+    classifier = nltk.DecisionTreeClassifier.train(train_set)
+    accuracy = nltk.classify.accuracy(classifier, test_set)
+    print "classification accuracy: " + str(accuracy)
+    # Print Out Decision Tree
+    print classifier.pseudocode(depth = 4)
+
+    return accuracy
+
+
+# Simple Test
+
 car_csv_path = '.\\car\\car.data'
 cars = loadCarList(car_csv_path)
 
 all_cars = getLabeledCars(cars)
 
-print "using all attributes as features"
-print '---------------------------------------------------'
-features = getAllFeatures
+print "using tech attributes as feature set: "
+#features = getAllFeatures
 #features = getPriceFeatures
-#features = getTechFeatures
-
+features = getTechFeatures
 
 feature_sets = getFeatureSets(all_cars, features)
-test_length = int(round(len(feature_sets) / 5))
-tree_depth_count = 2
+# 5 fold CV
+n_fold_cv(5, feature_sets, runDecisionTree)
 
-
-# print 'test set size: ' + str(test_length)
-randomKey = random.randrange(1, 6) # select
-
-accuracies = []
-n = 5
-for step in range(0, n) :
-    # for N fold CV
-    train_set = []
-    test_set = []
-
-    print '5-fold cross validation: ' + str(step)
-    idx = 0
-    for feature in feature_sets:
-
-        if (idx >= (step * test_length)) and (idx < (step * test_length) + test_length):
-            test_set.append(feature)
-        else:
-            train_set.append(feature)
-        idx = idx + 1
-
-    print "number of training sets: " + str(len(train_set))
-    print "number of test sets: " + str(len(test_set))
-
-    # Using Decision Tree Classifier
-
-    classifier = nltk.DecisionTreeClassifier.train(train_set)
-
-    accuracy = nltk.classify.accuracy(classifier, test_set)
-    accuracies.append(accuracy)
-    print "classification accuracy: " + str(accuracy)
-
-    # Print Out Decision Tree
-    print classifier.pseudocode(depth=tree_depth_count)
-    print '---------------------------------------------------'
-
-# print average accuracy
-accuracy_sum = 0.0
-for accuracy in accuracies:
-    accuracy_sum = accuracy_sum + accuracy
-
-avg_accuracy = (accuracy_sum / len(accuracies))
-print "average accuracy: " + str(avg_accuracy)

@@ -1,0 +1,173 @@
+using all attributes as feature set:
+---------------------------------------------------
+total data set: 518
+5-fold cross validation: 0
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 1.0
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 1
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 1.0
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 2
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.805825242718
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 3
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.495145631068
+if buying == 'high': return 'acc'
+if buying == 'low':
+  if safety == 'high':
+    if lug_boot == 'big': return 'vgood'
+    if lug_boot == 'med':
+      if doors == '2': return 'good'
+      if doors == '3': return 'vgood'
+      if doors == '4': return 'vgood'
+      if doors == '5more': return 'vgood'
+    if lug_boot == 'small':
+      if maint == 'high': return 'acc'
+      if maint == 'low': return 'good'
+      if maint == 'med': return 'good'
+  if safety == 'med':
+    if lug_boot == 'big':
+      if maint == 'high': return 'acc'
+      if maint == 'low': return 'good'
+      if maint == 'med': return 'good'
+    if lug_boot == 'med':
+      if doors == '2': return 'acc'
+      if doors == '3': return 'good'
+      if doors == '4': return 'good'
+      if doors == '5more': return 'good'
+    if lug_boot == 'small': return 'acc'
+if buying == 'med':
+  if maint == 'high': return 'acc'
+  if maint == 'low':
+    if safety == 'high':
+      if lug_boot == 'big': return 'vgood'
+      if lug_boot == 'med': return 'good'
+      if lug_boot == 'small': return 'good'
+    if safety == 'med':
+      if lug_boot == 'big': return 'good'
+      if lug_boot == 'med': return 'acc'
+      if lug_boot == 'small': return 'acc'
+  if maint == 'med':
+    if safety == 'high':
+      if lug_boot == 'big': return 'vgood'
+      if lug_boot == 'med': return 'vgood'
+      if lug_boot == 'small': return 'acc'
+    if safety == 'med': return 'acc'
+  if maint == 'vhigh': return 'acc'
+if buying == 'vhigh': return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 4
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.281553398058
+return 'acc'
+
+---------------------------------------------------
+average accuracy: 0.716504854369
+
+
+using price attributes as feature set:
+---------------------------------------------------
+total data set: 518
+5-fold cross validation: 0
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 1.0
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 1
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 1.0
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 2
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.805825242718
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 3
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.407766990291
+if buying == 'high': return 'acc'
+if buying == 'low':
+  if maint == 'high': return 'acc'
+  if maint == 'low': return 'good'
+  if maint == 'med': return 'good'
+if buying == 'med':
+  if maint == 'high': return 'acc'
+  if maint == 'low': return 'good'
+  if maint == 'med': return 'acc'
+  if maint == 'vhigh': return 'acc'
+if buying == 'vhigh': return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 4
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.281553398058
+return 'acc'
+
+---------------------------------------------------
+average accuracy: 0.699029126214
+
+
+using tech attributes as feature set:
+---------------------------------------------------
+total data set: 518
+5-fold cross validation: 0
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 1.0
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 1
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 1.0
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 2
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.805825242718
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 3
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.640776699029
+return 'acc'
+
+---------------------------------------------------
+5-fold cross validation: 4
+number of training sets: 415
+number of test sets: 103
+classification accuracy: 0.281553398058
+return 'acc'
+
+---------------------------------------------------
+average accuracy: 0.745631067961
