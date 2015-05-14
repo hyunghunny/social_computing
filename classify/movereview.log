@@ -1,0 +1,51 @@
+Category: [u'neg']
+Words in neg/cv000_29416.txt: [u'plot', u':', u'two', u'teen', u'couples', u'go', ...]
+Number of training set: 1900
+Number of test set: 100
+classification accuracy: 0.59
+Most Informative Features
+    contains(mediocrity) = True              neg : pos    =      7.6 : 1.0
+        contains(fabric) = True              pos : neg    =      6.4 : 1.0
+        contains(doubts) = True              pos : neg    =      5.9 : 1.0
+     contains(uplifting) = True              pos : neg    =      5.6 : 1.0
+  contains(effortlessly) = True              pos : neg    =      5.4 : 1.0
+    |  n  p |
+    |  e  o |
+    |  g  s |
+----+-------+
+neg |<33>11 |
+pos | 30<26>|
+----+-------+
+(row = reference; col = test)
+
+    |      p      n |
+    |      o      e |
+    |      s      g |
+----+---------------+
+pos | <26.0%> 30.0% |
+neg |  11.0% <33.0%>|
+----+---------------+
+(row = reference; col = test)
+
+if contains(shows) == False:
+  if contains(portrayed) == False:
+    if contains(nature) == False:
+      if contains(greatness) == False: return u'pos'
+      if contains(greatness) == True: return u'pos'
+    if contains(nature) == True:
+      if contains(suffice) == False: return u'pos'
+      if contains(suffice) == True: return u'neg'
+  if contains(portrayed) == True:
+    if contains(wholesome) == False:
+      if contains(tulip) == False: return u'neg'
+      if contains(tulip) == True: return u'neg'
+    if contains(wholesome) == True: return u'neg'
+if contains(shows) == True:
+  if contains(rick) == False:
+    if contains(extent) == False:
+      if contains(screaming) == False: return u'pos'
+      if contains(screaming) == True: return u'pos'
+    if contains(extent) == True:
+      if contains(saddened) == False: return u'neg'
+      if contains(saddened) == True: return u'pos'
+  if contains(rick) == True: return u'neg'

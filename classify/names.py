@@ -24,7 +24,7 @@ def getUniSexualNames() :
     uni_names =  [w for w in male_names if w in female_names ]
     return uni_names
 
-def getRandomNames() :
+def getLabeledNames() :
     all_names = ([(name, 'male') for name in names.words(male_file)] +
                  [(name, 'female') for name in names.words(female_file)])
     # names before shuffling
@@ -50,24 +50,17 @@ def getFeatureSets(names, features):
     feature_sets = [ (features(n), g) for (n, g) in names ]
     return feature_sets
 
-
-def getNaiveBayesClassifier(train_set) :
-    classifier = nltk.NaiveBayesClassifier.train(train_set)
-    return classifier
-
-
 # Simple tests
 #print getUniSexualNames()
-all_names = getRandomNames()
+all_names = getLabeledNames()
 
-features = getGenderFeatures
 # features = getSingleEndLetterFeatures
 
-feature_sets = getFeatureSets(all_names, features)
+feature_sets = getFeatureSets(all_names, getGenderFeatures)
 train_set = feature_sets[500:]
 test_set = feature_sets[:500]
 
-classifier = getNaiveBayesClassifier(train_set)
+classifier = classifier = nltk.NaiveBayesClassifier.train(train_set)
 
 # Simple prediction
 #print classifier.classify(features('Neo'))

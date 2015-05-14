@@ -34,17 +34,17 @@ def document_features(document):
 # Simple Test
 
 file_ids = movie_reviews.fileids()
-#file = file_ids[0]
-file ='pos/cv995_21821.txt'
+file = file_ids[0]
+#file ='pos/cv995_21821.txt'
 printReviewInfo(file)
 
 all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
-word_features = all_words.keys()[:2000]
+word_features = all_words.keys()[:600]
 
-print '10 features in words '
-for feature in word_features[:10] :
-    print feature
-print ''
+#print '10 features in words '
+#for feature in word_features[:10] :
+#    print feature
+#print ''
 
 documents = getDocuments()
 featuresets = [(document_features(d), c)for (d,c) in documents]
@@ -61,11 +61,10 @@ print "classification accuracy: " + str(accuracy)
 classifier.show_most_informative_features(5)
 
 
-# Classification Tree
+# Precision-Recall Test
 gold = [tag for (features, tag) in test_set]
 test = [classifier.classify(features) for features, tag in test_set]
 cm = nltk.ConfusionMatrix(gold, test)
-
 print cm.pp()
 print cm.pp(sort_by_count=True, show_percents=True)
 
