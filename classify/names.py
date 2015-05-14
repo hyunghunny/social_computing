@@ -56,7 +56,6 @@ def getNaiveBayesClassifier(train_set) :
     return classifier
 
 
-
 # Simple tests
 #print getUniSexualNames()
 all_names = getRandomNames()

@@ -1,0 +1,68 @@
+Number of word features: 8235
+Number of training set: 250
+Number of test set: 250
+
+
+selecting 2000 sorted features
+
+Classification accuracy: 0.912
+Most Informative Features
+         contains(pound) = True           Alexan : Benjam =     25.0 : 1.0
+           contains(net) = True           Bernar : AaronP =     21.0 : 1.0
+        contains(growth) = True           Bernar : Benjam =     19.0 : 1.0
+         contains(polit) = True           Benjam : Alexan =     17.7 : 1.0
+     contains(communist) = True           Benjam : AlanCr =     17.0 : 1.0
+       contains(company) = True           Alexan : Benjam =     17.0 : 1.0
+          contains(call) = True           Alexan : Bernar =     16.3 : 1.0
+         contains(close) = True           Bernar : AaronP =     16.3 : 1.0
+        contains(comput) = True           AaronP : Bernar =     16.3 : 1.0
+          contains(bank) = True           Alexan : Benjam =     16.3 : 1.0
+
+
+
+selecting 2000 unsorted features
+
+Classification accuracy: 0.856
+Most Informative Features
+         contains(pound) = True           Alexan : Benjam =     25.0 : 1.0
+        contains(comput) = True           AaronP : Bernar =     16.3 : 1.0
+    contains(government) = True           Benjam : Bernar =     14.3 : 1.0
+         contains(offer) = True           Alexan : AlanCr =     13.7 : 1.0
+         contains(littl) = True           AlanCr : Alexan =     13.7 : 1.0
+        contains(number) = True           AaronP : Bernar =     13.7 : 1.0
+      contains(introduc) = True           AaronP : Alexan =     11.7 : 1.0
+        contains(legisl) = True           AaronP : Alexan =     11.7 : 1.0
+          contains(life) = True           Benjam : AlanCr =     11.0 : 1.0
+         contains(feder) = True           AaronP : Benjam =     11.0 : 1.0
+
+
+selecting 5000 sorted features
+
+Classification accuracy: 0.924
+Most Informative Features
+         contains(pound) = True           Alexan : Benjam =     25.0 : 1.0
+           contains(net) = True           Bernar : AaronP =     21.0 : 1.0
+        contains(growth) = True           Bernar : Benjam =     19.0 : 1.0
+         contains(polit) = True           Benjam : Alexan =     17.7 : 1.0
+     contains(communist) = True           Benjam : AlanCr =     17.0 : 1.0
+       contains(company) = True           Alexan : Benjam =     17.0 : 1.0
+          contains(bank) = True           Alexan : Benjam =     16.3 : 1.0
+         contains(close) = True           Bernar : AaronP =     16.3 : 1.0
+        contains(comput) = True           AaronP : Bernar =     16.3 : 1.0
+          contains(lost) = True           AlanCr : Bernar =     16.3 : 1.0
+
+
+selecting 5000 sorted features
+
+Classification accuracy: 0.904
+Most Informative Features
+         contains(pound) = True           Alexan : Benjam =     25.0 : 1.0
+           contains(net) = True           Bernar : AaronP =     21.0 : 1.0
+         contains(polit) = True           Benjam : Alexan =     17.7 : 1.0
+          contains(bank) = True           Alexan : Benjam =     16.3 : 1.0
+         contains(close) = True           Bernar : AaronP =     16.3 : 1.0
+        contains(comput) = True           AaronP : Bernar =     16.3 : 1.0
+          contains(lost) = True           AlanCr : Bernar =     16.3 : 1.0
+          contains(call) = True           Alexan : Bernar =     16.3 : 1.0
+          contains(cost) = True           Alexan : Benjam =     15.0 : 1.0
+       contains(announc) = True           Bernar : AlanCr =     14.3 : 1.0
