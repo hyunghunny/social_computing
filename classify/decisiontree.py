@@ -5,6 +5,7 @@
 #
 
 import nltk
+import random
 
 from car import Car
 from car import read_csv_data
@@ -30,7 +31,7 @@ def loadCarList(path) :
 def getLabeledCars(car_list) :
     all_cars = [(car, car.getClass()) for car in car_list]
     # for shuffling data
-    #random.shuffle(all_cars)
+    random.shuffle(all_cars)
     return all_cars
 
 def getFeatureSets(cars, func):
@@ -126,9 +127,9 @@ cars = loadCarList(car_csv_path)
 all_cars = getLabeledCars(cars)
 
 print "using tech attributes as feature set: "
-#features = getAllFeatures
+features = getAllFeatures
 #features = getPriceFeatures
-features = getTechFeatures
+#features = getTechFeatures
 
 feature_sets = getFeatureSets(all_cars, features)
 # 5 fold CV
