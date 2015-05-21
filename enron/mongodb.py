@@ -195,7 +195,9 @@ def printMessagesByRange(mbox):
 # Simple test
 
 # Connects to the MongoDB server
-client = pymongo.MongoClient()
+#client = pymongo.MongoClient()
+client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
+
 # Get a reference to the enron database
 #db = client.enron
 
