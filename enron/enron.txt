@@ -1,0 +1,135 @@
+Mail Statistics
+----
+Number of messages in mbox: 41299
+Num Senders: 7665
+Num Receivers: 22162
+Num CC Receivers: 6561
+Num BCC Receivers: 6561
+Num senders in common with receivers: 3220
+Num senders who didn't receive: 4445
+Num receivers who didn't send: 18942
+Num senders in common with *all* receivers: 3440
+
+Statistics for Enron employees
+---
+Num Senders: 3137
+Num Receivers: 16653
+Num CC Receivers: 4890
+Num BCC Receivers: 4890
+
+
+Top 100 mail sender of Enron employees  list
+----
+veronica.espinoza: 3551
+l..denton: 2917
+jae.black: 2645
+ginger.dernehl: 2332
+julie.clyatt: 2085
+lorna.brennan: 1836
+cheryl.johnson: 1713
+bob.ambrocik: 1589
+fraisy.george: 1482
+richard.shapiro: 1325
+bodyshop: 1317
+jacqueline.coleman: 1187
+esmeralda.hinojosa: 1184
+david.oxley: 1117
+kenneth.lay: 1043
+lisa.jones: 1029
+m..smith: 961
+susan.lindberg: 932
+neil.davies: 923
+technology.enron: 902
+shona.wilson: 901
+khymberly.booth: 896
+alan.comnes: 849
+stephanie.panus: 841
+billy.lemmons: 840
+janet.butler: 808
+janel.guerrero: 793
+kenneth.thibodeaux: 783
+janette.elbertson: 778
+simone.la: 777
+donna.lowry: 768
+joannie.williamson: 762
+david.forster: 741
+daniel.muschar: 740
+brandee.jackson: 739
+louise.kitchen: 703
+susan.mara: 616
+amber.ebow: 593
+iris.mack: 575
+becky.spencer: 573
+mary.cook: 561
+outlook.team: 547
+rika.imai: 540
+lara.leibman: 535
+e..haedicke: 535
+karen.buckley: 532
+tammie.schoppe: 526
+victor.lamadrid: 526
+melody.gray: 524
+marie.heard: 509
+kenneth.cessac: 497
+dorie.hitchcock: 493
+w..cantrell: 484
+esmeralda.gonzalez: 466
+shelley.corman: 456
+samantha.boyd: 455
+susan.bailey: 440
+jeff.dasovich: 435
+sally.beck: 430
+jerry.graves: 428
+ina.rangel: 422
+kimberly.bates: 422
+holly.keiser: 416
+alicia.jenkins: 413
+hector.mcloughlin: 408
+susan.scott: 404
+colin.tonks: 402
+audrey.robertson: 392
+stacey.richardson: 388
+georgia.ward: 384
+karen.denne: 373
+liz.taylor: 370
+no.address: 368
+john.lavorato: 356
+danielle.marcinkowski: 352
+melissa.becker: 350
+l..nicolay: 349
+jill.chatterton: 348
+martha.keesler: 348
+glen.hass: 347
+tim.belden: 340
+don.baughman: 334
+chris.abel: 332
+kathryn.sheppard: 329
+ava.garcia: 324
+alma.carrillo: 320
+cindy.richardson: 311
+transportation.parking: 309
+randy.janzen: 309
+anna.mehrer: 308
+rita.hartfield: 306
+teresa.bosien: 298
+d..hare: 296
+wendi.lebrocq: 294
+kam.keiser: 287
+grace.rodriguez: 284
+adam.johnson: 275
+constance.charles: 270
+paula.rieker: 269
+dennis.lee: 268
+
+
+Top mail exchange (by PageRank)
+----
+david.forster: 12.0
+tammie.schoppe: 11.0
+david.oxley: 11.0
+kenneth.lay: 11.0 (CEO)
+john.lavorato: 10.0
+louise.kitchen: 10.0
+sally.beck: 10.0
+julie.clyatt: 10.0
+tim.belden: 10.0

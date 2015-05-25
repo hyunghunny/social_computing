@@ -21,10 +21,6 @@ def showSampleMessage(mbox):
         indent=1,
         default=json_util.default)
 
-def pp(o, indent=1):
-	print json.dumps(o,
-		indent=indent,
-		default=json_util.default)
 
 # Enron 직원들의 기록
 def printEnronStats(mbox):
@@ -151,6 +147,7 @@ def printRecipients(mbox, sender):
         {"$group": {"_id": "$From", "recipients": {"$addToSet": "$To" } } }
     ]).next()['recipients']
 
+    print "For " + sender + ":"
     # Collapse the lists of recipients into a single list
     all_recipients = [ recipient for message in recipients_per_message for recipient in message]
     print "Num all recipients:", len(all_recipients)
@@ -162,10 +159,10 @@ def printRecipients(mbox, sender):
 # Aggregate querying for counts of messages by date/time range
 def printMessagesByRange(mbox):
     results = mbox.aggregate([{
-        # Create a sub document called DateBucket with each date component projected
-        # so that these fields can be grouped on in the next stage of the pipeline
-        "$project":
-            { "_id": 0,
+            # Create a sub document called DateBucket with each date component projected
+            # so that these fields can be grouped on in the next stage of the pipeline
+            "$project": {
+                "_id": 0,
                 "DateBucket": {
                     "year" : { "$year" : "$Date"},
                     "month" : {"$month" : "$Date"},
@@ -174,31 +171,31 @@ def printMessagesByRange(mbox):
                 }
             }
         },
-        { "$group": {
-            # Group by year and date by using these fields for the key.
-            "_id" : {"year": "$DateBucket.year",
-            "month" : "$DateBucket.month"},
-            # Increment the sum for each group by 1 for every document that's in it
-            "num_msgs" : {"$sum" : 1}
+        {
+            "$group": {
+                # Group by year and date by using these fields for the key.
+                "_id" : {"year": "$DateBucket.year",
+                "month" : "$DateBucket.month"},
+                # Increment the sum for each group by 1 for every document that's in it
+                "num_msgs" : {"$sum" : 1}
             }
         },
-        { "$sort" :
-            {
+        {
+            "$sort" : {
                 "_id.year": 1,
                 "_id.month": 1
             }
         }
     ])
 
-    for r in results:
-        print r
+    for r in results: print r
 
 
 # Simple test
 
 # Connects to the MongoDB server
-client = pymongo.MongoClient()
-#client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
+#client = pymongo.MongoClient()
+client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
 
 # Get a reference to the enron database
 #db = client.enron
@@ -213,7 +210,8 @@ start_date = dt(2001, 4, 1) # Year, Month, Day
 end_date = dt(2001, 4, 2) # Year, Month, Day
 
 #findMessagesByDate(mbox, start_date, end_date)
-#analyzePatterns(mbox)
+analyzePatterns(mbox)
+printEnronStats(mbox)
 #aggregate(mbox)
 
 # print whom had been received from CEO
