@@ -13,7 +13,7 @@ import pymongo # pip install pymongo
 def writeJSONGraph(graph):
     json.dump(json_graph.node_link_data(graph), open('force.json','w'))
 
-def findTopMailer(n):
+def findTopSenders(n):
     # TODO: find top 'n' person who sent many e-mails
     client = pymongo.MongoClient()
     #client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
@@ -34,7 +34,7 @@ def findTopMailer(n):
 graph = nx.Graph()
 num_nodes = 100
 rank = 1/float(num_nodes)
-nodes = findTopMailer(num_nodes)
+nodes = findTopSenders(num_nodes)
 # update nodes
 graph.add_nodes_from(nodes, rank=rank, size=10)
 

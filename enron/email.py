@@ -161,8 +161,7 @@ def printRecipients(mbox, sender):
 
 # Aggregate querying for counts of messages by date/time range
 def printMessagesByRange(mbox):
-    results = mbox.aggregate([
-        {
+    results = mbox.aggregate([{
         # Create a sub document called DateBucket with each date component projected
         # so that these fields can be grouped on in the next stage of the pipeline
         "$project":
@@ -213,10 +212,13 @@ print "Number of messages in mbox: " + str(mbox.count())
 start_date = dt(2001, 4, 1) # Year, Month, Day
 end_date = dt(2001, 4, 2) # Year, Month, Day
 
-findMessagesByDate(mbox, start_date, end_date)
-analyzePatterns(mbox)
-aggregate(mbox)
+#findMessagesByDate(mbox, start_date, end_date)
+#analyzePatterns(mbox)
+#aggregate(mbox)
 
 # print whom had been received from CEO
-printRecipients(mbox, "kenneth.lay@enron.com")
+#printRecipients(mbox, "kenneth.lay@enron.com")
+# print whom had been received from secretary
+printRecipients(mbox, "rosalee.fleming@enron.com")
+
 printMessagesByRange(mbox)
