@@ -7,13 +7,24 @@ import json
 
 import networkx as nx
 from networkx.readwrite import json_graph
+import pymongo # pip install pymongo
 
 
 def writeJSONGraph(graph):
     json.dump(json_graph.node_link_data(graph), open('force.json','w'))
 
 def findTopMailer(n):
-    # TODO: find top 100 person who sent many e-mails
+    # TODO: find top 'n' person who sent many e-mails
+    client = pymongo.MongoClient()
+    #client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
+
+    # Reference the mbox collection in the Enron database
+    mbox = client.enron.mbox # The number of messages in the collection
+
+    # in all senders, calculate the # of mails
+    senders = [ i for i in mbox.distinct("From")
+        if i.lower().find("@enron.com") > -1 ]
+
     return set()
 
 # TODO 가장 많은 이메일을 보낸 사람을 순서대로 100명을 구하시오

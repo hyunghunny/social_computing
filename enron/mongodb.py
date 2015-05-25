@@ -47,17 +47,18 @@ def printEnronStats(mbox):
 
 # Query the database with the highly versatile "find" command,
 # just like in the MongoDB shell.
-def findMessages(mbox, start_date, end_date):
-    query = mbox.find({"Date":
-        { "$lt": end_date,
-        "$gt": start_date
-        }}).sort("date")
+def findMessagesByDate(mbox, start_date, end_date):
+    query = mbox.find({
+        "Date" :
+            { "$lt": end_date,
+              "$gt": start_date
+            }
+        }).sort("date")
 
     msgs = [ msg for msg in query ]
 
-
-    print "Messages from a query by date range:"
-    pp(msgs)
+    print "Messages from a query by date range: " + start_date + " ~ " + end_date
+    print json.dumps(msgs, indent=1, default=json_util.default)
 
 
 # CEO의 이메일
@@ -74,8 +75,8 @@ def printCEOMsgs(mbox):
     from_msgs = [ msg for msg in mbox.find({"From" :
         { "$in" : aliases } })]
 
-    print "Number of message sent to:", len(to_msgs)
-    print "Number of messages sent from:", len(from_msgs)
+    print "Number of CEO message sent to:", len(to_msgs)
+    print "Number of CEO messages sent from:", len(from_msgs)
 
 
 # Aggregation in MongoDB
@@ -105,11 +106,12 @@ def aggregate(mbox):
 
 
 # Analyzing Patterns in Sender/Recipient
-def analyze(mbox):
+def analyzePatterns(mbox):
     senders = [ i for i in mbox.distinct("From") ]
     receivers = [ i for i in mbox.distinct("To") ]
     cc_receivers = [ i for i in mbox.distinct("Cc") ]
     bcc_receivers = [ i for i in mbox.distinct("Bcc") ]
+
     print "Num Senders:", len(senders)
     print "Num Receivers:", len(receivers)
     print "Num CC Receivers:", len(cc_receivers)
@@ -141,7 +143,6 @@ def analyze(mbox):
     print "Num senders in common with *all* receivers:", len(senders_all_receivers)
 
 
-
 def printRecipients(mbox, sender):
     # Get the recipient lists for each message
     recipients_per_message = mbox.aggregate([
@@ -162,7 +163,7 @@ def printRecipients(mbox, sender):
 def printMessagesByRange(mbox):
     results = mbox.aggregate([
         {
-        # Create a subdocument called DateBucket with each date component projected
+        # Create a sub document called DateBucket with each date component projected
         # so that these fields can be grouped on in the next stage of the pipeline
         "$project":
             { "_id": 0,
@@ -183,8 +184,10 @@ def printMessagesByRange(mbox):
             }
         },
         { "$sort" :
-            { "_id.year": 1,
-                "_id.month": 1}
+            {
+                "_id.year": 1,
+                "_id.month": 1
+            }
         }
     ])
 
@@ -195,8 +198,8 @@ def printMessagesByRange(mbox):
 # Simple test
 
 # Connects to the MongoDB server
-#client = pymongo.MongoClient()
-client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
+client = pymongo.MongoClient()
+#client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
 
 # Get a reference to the enron database
 #db = client.enron
@@ -210,10 +213,10 @@ print "Number of messages in mbox: " + str(mbox.count())
 start_date = dt(2001, 4, 1) # Year, Month, Day
 end_date = dt(2001, 4, 2) # Year, Month, Day
 
-findMessages(mbox, start_date, end_date)
-analyze(mbox)
+findMessagesByDate(mbox, start_date, end_date)
+analyzePatterns(mbox)
 aggregate(mbox)
 
 # print whom had been received from CEO
-printRecipients("kenneth.lay@enron.com")
+printRecipients(mbox, "kenneth.lay@enron.com")
 printMessagesByRange(mbox)
