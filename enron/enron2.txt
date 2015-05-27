@@ -1,0 +1,136 @@
+Mail Statistics
+----
+Number of messages in mbox: 41299
+Num Senders: 7665
+Num Receivers: 22162
+Num CC Receivers: 6561
+Num BCC Receivers: 6561
+Num senders in common with receivers: 3220
+Num senders who didn't receive: 4445
+Num receivers who didn't send: 18942
+Num senders in common with *all* receivers: 3440
+
+Statistics for Enron employees
+---
+Num Senders: 3137
+Num Receivers: 16653
+Num CC Receivers: 4890
+Num BCC Receivers: 4890
+
+
+Top 100 mail sender of Enron employees  list
+----
+kenneth.lay: 917
+technology.enron: 909
+bodyshop: 868
+julie.clyatt: 831
+bob.ambrocik: 819
+daniel.muschar: 754
+billy.lemmons: 716
+david.oxley: 685
+david.forster: 684
+esmeralda.hinojosa: 615
+jacqueline.coleman: 574
+neil.davies: 564
+khymberly.booth: 561
+lisa.jones: 515
+tammie.schoppe: 496
+outlook.team: 493
+alicia.jenkins: 413
+veronica.espinoza: 393
+sally.beck: 370
+janel.guerrero: 365
+danielle.marcinkowski: 330
+cindy.richardson: 302
+hector.mcloughlin: 295
+dorie.hitchcock: 293
+transportation.parking: 292
+lara.leibman: 289
+teresa.bosien: 288
+l..denton: 282
+stephanie.panus: 278
+brandee.jackson: 277
+constance.charles: 273
+liz.taylor: 271
+melody.gray: 266
+cheryl.johnson: 264
+janette.elbertson: 262
+john.lavorato: 260
+jeff.johnson: 259
+r..harrington: 255
+paul.kaufman: 248
+iris.mack: 248
+no.address: 247
+sonya.johnson: 243
+tom.wilbeck: 239
+andrea.richards: 237
+alyse.herasimchuk: 234
+leann.walton: 233
+walton: 233
+estalee.russi: 231
+jennifer.reed: 229
+amelia.alder: 228
+alan.comnes: 222
+body.shop: 220
+susan.bailey: 219
+chenee'.franklin: 219
+karen.denne: 216
+louise.kitchen: 216
+becky.spencer: 216
+paul.jordan: 215
+esmeralda.gonzalez: 214
+cecilia.cheung: 213
+donna.lowry: 211
+richard.shapiro: 205
+andy.zipper: 200
+jae.black: 199
+joannie.williamson: 196
+stacey.richardson: 196
+angie.collins: 194
+ginger.dernehl: 193
+ava.garcia: 190
+e..haedicke: 188
+sharron.westbrook: 186
+becker: 184
+shona.wilson: 183
+karen.buckley: 180
+ruby.kyser: 177
+simone.la: 174
+amy.fitzpatrick: 174
+fraisy.george: 172
+w..cantrell: 172
+jerry.graves: 172
+frazier.king: 172
+paula.rieker: 170
+jeff.dasovich: 168
+alma.carrillo: 168
+susan.mara: 165
+shelley.corman: 164
+rika.imai: 160
+kenneth.cessac: 155
+chris.abel: 152
+susan.lindberg: 152
+georgia.ward: 149
+andy.rodriquez: 145
+donna.martens: 144
+rod.hayslett: 141
+deb.korkmas: 139
+patrick.cagney: 136
+holly.keiser: 135
+pam.metoyer: 134
+paulette.obrecht: 134
+marie.heard: 133
+
+
+Top heavy sender (by PageRank)
+----
+kenneth.lay: 12.0 (CEO)
+tammie.schoppe: 12.0 (The Person in charge of ERV Notification)
+david.oxley: 11.0 (executive from human resources)
+sally.beck: 11.0
+louise.kitchen: 11.0
+david.forster: 11.0
+john.lavorato: 11.0
+karen.denne: 10.0
+e..haedicke: 10.0
+julie.clyatt: 10.0

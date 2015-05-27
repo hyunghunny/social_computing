@@ -77,29 +77,36 @@ def printCEOMsgs(mbox):
 
 # Aggregation in MongoDB
 # TODO fully understanding of aggregation is required
-def aggregate(mbox):
+def showAllCEORecipients(mbox):
     results = mbox.aggregate([
 		{"$match": {"From" :
 			"kenneth.lay@enron.com"}
 		},
 		{"$project":
-			{"From": 1, "To": 1}
+			{"From": 1, "To": 1, "Cc": 1, "Bcc": 1 }
 		},
 		{"$group":
 			{"_id":	"$From",
-			    "recipients": {
-                    "$addToSet": "$To"
+			    "recipients": { "$addToSet" : "$To"   },
+                "carbone_copy" : { "$addToSet" : "$Cc"   },
+                "blind_carbone_copy" : { "$addToSet" : "$Bcc"   },
                 }
 			}
-		}
+
 	])
+    all_recipients = set()
     for r in results:
-        #print r
-        print r["_id"]
-        for recipient in r["recipients"]:
-            print recipient
 
-
+        for recipients in r["recipients"]:
+            for to in recipients :
+                all_recipients.add(to)
+        for recipients in r["carbone_copy"]:
+            for cc in recipients :
+                all_recipients.add(cc)
+        for recipients in r["blind_carbone_copy"]:
+            for bcc in recipients :
+                all_recipients.add(cc)
+    print "all recipients of CEO mails: " + str(len(all_recipients))
 
 # Analyzing Patterns in Sender/Recipient
 def analyzePatterns(mbox):
@@ -208,6 +215,19 @@ print "Number of messages in mbox: " + str(mbox.count())
 query = mbox.find({ "X-To": "" })
 no_to_mails = [ msg for msg in query ]
 print "# of mails which has no recipients: " + str(len(no_to_mails))
+import re
+query = mbox.find({"From" : { "$not": re.compile(r"^.*@enron\.com") } })
+not_enron_domain_mails = [ msg for msg in query ]
+print "# of mails which use not @enron.com as sender address : " + str(len(not_enron_domain_mails))
+for mail in not_enron_domain_mails:
+    print mail['From']
+query = mbox.find({"To" : { "$not": re.compile(r"^.*@enron\.com") } })
+not_enron_domain_mails = [ msg for msg in query ]
+print "# of mails which use not @enron.com as sender address : " + str(len(not_enron_domain_mails))
+
+
+
+# peer to peer mails
 query = mbox.find({"To": {"$size" : 1 }})
 peer_to_peer_mails =  [ msg for msg in query ]
 print "# of mails which were sent peer to peer: " + str(len(peer_to_peer_mails))
@@ -222,7 +242,7 @@ end_date = dt(2001, 4, 2) # Year, Month, Day
 findMessagesByDate(mbox, start_date, end_date)
 analyzePatterns(mbox)
 printEnronStats(mbox)
-#aggregate(mbox)
+showAllCEORecipients(mbox)
 
 # print whom had been received from CEO
 #printRecipients(mbox, "kenneth.lay@enron.com")

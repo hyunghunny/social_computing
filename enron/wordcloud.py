@@ -19,7 +19,7 @@ from collections import Counter
 from prettytable import PrettyTable
 
 
-def getCEOMailsContent(mbox) :
+def get_ceo_mails_content(mbox) :
     aliases = ["kenneth.lay@enron.com",
     "ken_lay@enron.com",
     "ken.lay@enron.com",
@@ -36,7 +36,7 @@ def getCEOMailsContent(mbox) :
 ##
 # Get content of private mails in enron company
 #
-def getPrivateMailsContent(mbox) :
+def get_private_mails_content(mbox) :
     #  get all of content which was sent peer to peer from mbox
     query = mbox.find({"To": {"$size" : 1 }})
     peer_to_peer_mails =  [ msg for msg in query ]
@@ -116,8 +116,8 @@ client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's d
 # Reference the mbox collection in the Enron database
 mbox = client.enron.mbox # The number of messages in the collection
 
-#contents = getPrivateMailsContent(mbox)
-contents = getCEOMailsContent(mbox)
+contents = get_private_mails_content(mbox)
+contents = get_ceo_mails_content(mbox)
 tokens = tokenize(contents)
 #print tokens
 stemmed = get_stemmed_list(tokens)
