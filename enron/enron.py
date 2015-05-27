@@ -48,7 +48,7 @@ def writeJSONGraph(graph):
     json.dump(json_graph.node_link_data(graph), open('force.json','w'))
 
 def findTopSenders(n):
-    # TODO: find top 'n' person who sent many e-mails
+    # find top 'n' person who sent many e-mails
     #client = pymongo.MongoClient()
     client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
 

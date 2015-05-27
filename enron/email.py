@@ -53,7 +53,7 @@ def findMessagesByDate(mbox, start_date, end_date):
 
     msgs = [ msg for msg in query ]
 
-    print "Messages from a query by date range: " + start_date + " ~ " + end_date
+    print "Messages from a query by date range: " + str(start_date) + " ~ " + str(end_date)
     print json.dumps(msgs, indent=1, default=json_util.default)
 
 
@@ -204,12 +204,22 @@ client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's d
 mbox = client.enron.mbox # The number of messages in the collection
 print "Number of messages in mbox: " + str(mbox.count())
 
+# mysterious mails statistics
+query = mbox.find({ "X-To": "" })
+no_to_mails = [ msg for msg in query ]
+print "# of mails which has no recipients: " + str(len(no_to_mails))
+query = mbox.find({"To": {"$size" : 1 }})
+peer_to_peer_mails =  [ msg for msg in query ]
+print "# of mails which were sent peer to peer: " + str(len(peer_to_peer_mails))
+private_mails =  [ i for i in peer_to_peer_mails
+        if i['From'].lower().find("@enron.com") > -1 ]
+print "# of private mails which were sent peer to peer: " + str(len(private_mails))
 
 # Create a small date range here of one day
 start_date = dt(2001, 4, 1) # Year, Month, Day
 end_date = dt(2001, 4, 2) # Year, Month, Day
 
-#findMessagesByDate(mbox, start_date, end_date)
+findMessagesByDate(mbox, start_date, end_date)
 analyzePatterns(mbox)
 printEnronStats(mbox)
 #aggregate(mbox)
