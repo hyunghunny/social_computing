@@ -10,7 +10,7 @@ import json
 import networkx as nx
 from networkx.readwrite import json_graph
 import pymongo # pip install pymongo
-
+from collections import Counter
 ##
 # Ranking node with page rank algorithm
 #
@@ -49,6 +49,30 @@ def rank_nodes(graph, k=10):
 def writeJSONGraph(graph):
     json.dump(json_graph.node_link_data(graph), open('force.json','w'))
 
+
+def get_all_senders(mbox) :
+    import re
+    query = mbox.find({ "X-To": {"$regex" : re.compile(r"^.+")} }) # find valid mail which has (a) recipient(s)
+    #query = mbox.find({})
+    all_mails = [ msg for msg in query ]
+    #print len(all_mails)
+
+    # sort all mails by sender who sent many mails
+    all_senders = [ msg["From"] for msg in all_mails ]
+    return all_senders
+
+
+def print_top_rank(all_senders, n):
+
+    sent_occurrences = Counter(all_senders)
+    # print top 100 senders
+    ranks = sent_occurrences.most_common(n)
+    counter = 1
+    for ranker in ranks :
+        print str(counter) + ", " + ranker[0] + ", " + str(ranker[1])
+        counter = counter + 1
+
+
 # get all nodes from mbox and valid senders
 def get_all_nodes(mbox, senders) :
 
@@ -76,6 +100,7 @@ def get_all_nodes(mbox, senders) :
 
 def get_mail_exchange(mbox, all_senders):
     sender_recipients = []
+    all_senders = set(all_senders) # remove duplicates
     for sender in all_senders:
         # Get all recipient lists for each message
         results = mbox.aggregate([
@@ -93,22 +118,22 @@ def get_mail_exchange(mbox, all_senders):
                 }
 
         ])
-        all_recipients = set()
+        all_recipients = list()
         for r in results:
 
             for recipients in r["recipients"]:
                 for to in recipients :
-                    all_recipients.add(to)
+                    all_recipients.append(to)
             for recipients in r["carbone_copy"]:
                 for cc in recipients :
-                    all_recipients.add(cc)
+                    all_recipients.append(cc)
             for recipients in r["blind_carbone_copy"]:
                 for bcc in recipients :
-                    all_recipients.add(cc)
+                    all_recipients.append(cc)
 
         sender_recipients.append({
             "id" : sender[:sender.index('@')], # extract id from email address
-            "email" : sender,
+            "sender" : sender,
             "recipients" : list(all_recipients),
             "count" : len(all_recipients)
         })
@@ -117,14 +142,16 @@ def get_mail_exchange(mbox, all_senders):
 def createEdges(exchanges):
 
     edges = []
-    for sender in exchanges:
+    for exchange in exchanges:
         # count the occurrence of selected sender in recipients
-        for recipient in exchanges:
-            exchange_count = sender['recipients'].count(recipient['email'])
-            # skip self-received mails and no exchanges between them
-            if (sender['email'] is not recipient['email'] and exchange_count > 0):
-                #print top_sender['id'] + ":" + str(exchange_count) + ":" + interested_sender['id']
-                edges.append((sender['id'], exchange_count, recipient['id']))
+        sender = exchange['id']
+        recipient_occurrences = Counter(exchange['recipients'])
+        print recipient_occurrences
+        for key in recipient_occurrences:
+            recipient = key[:key.index('@')]
+            exchange_count = recipient_occurrences[key]
+            edges.append((sender, exchange_count, recipient))
+
     return edges
 
 
@@ -132,34 +159,27 @@ def createEdges(exchanges):
 # 사람을 노드로 그들간의 이메일 교환을 링크로 하는 graph를 구하고 전에 배운 force.html을
 # 이용하여 소셜 그래프로 그리고 이를 enron.jpg로 capture해서 제출
 
-client = pymongo.MongoClient()
-#client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
+#client = pymongo.MongoClient()
+client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
 
 # Reference the mbox collection in the Enron database
 mbox = client.enron.mbox # The number of messages in the collection
 
-import re
-query = mbox.find({ "X-To": {"$regex" : re.compile(r"^.+")} }) # find valid mail which has (a) recipient(s)
-#query = mbox.find({})
-all_mails = [ msg for msg in query ]
-#print len(all_mails)
 
-# sort all mails by sender who sent many mails
-all_senders = [ msg["From"] for msg in all_mails ]
-print len(all_senders)
-from collections import Counter
-sent_occurrences = Counter(all_senders)
-# print top 100 senders
-print sent_occurrences.most_common(100)
-
+all_senders = get_all_senders(mbox)
+print_top_rank(all_senders, 100)
 nodes = get_all_nodes(mbox, all_senders)
 num_nodes = len(nodes) # of total nodes
 
+print "Total nodes: " + str(num_nodes)
+
 exchanges = get_mail_exchange(mbox, all_senders)
+print len(exchanges)
 edges = createEdges(exchanges)
+print len(edges)
+
 
 graph = nx.Graph()
-
 rank = 1/float(num_nodes)
 
 graph.add_nodes_from(nodes, rank=rank, size=10)

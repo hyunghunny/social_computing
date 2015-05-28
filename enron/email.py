@@ -215,12 +215,23 @@ print "Number of messages in mbox: " + str(mbox.count())
 query = mbox.find({ "X-To": "" })
 no_to_mails = [ msg for msg in query ]
 print "# of mails which has no recipients: " + str(len(no_to_mails))
+
 import re
 query = mbox.find({"From" : { "$not": re.compile(r"^.*@enron\.com") } })
 not_enron_domain_mails = [ msg for msg in query ]
 print "# of mails which use not @enron.com as sender address : " + str(len(not_enron_domain_mails))
-for mail in not_enron_domain_mails:
-    print mail['From']
+other_domains = set()
+for mail in not_enron_domain_mails :
+    sender = mail['From']
+    mail_domain = sender[sender.index('@'):]
+    other_domains.add(mail_domain)
+    #print from
+print "# of other mail domains: " + str(len(other_domains))
+
+
+for domain in other_domains:
+    print domain
+
 query = mbox.find({"To" : { "$not": re.compile(r"^.*@enron\.com") } })
 not_enron_domain_mails = [ msg for msg in query ]
 print "# of mails which use not @enron.com as sender address : " + str(len(not_enron_domain_mails))
@@ -240,13 +251,13 @@ start_date = dt(2001, 4, 1) # Year, Month, Day
 end_date = dt(2001, 4, 2) # Year, Month, Day
 
 findMessagesByDate(mbox, start_date, end_date)
-analyzePatterns(mbox)
-printEnronStats(mbox)
-showAllCEORecipients(mbox)
+#analyzePatterns(mbox)
+#printEnronStats(mbox)
+#showAllCEORecipients(mbox)
 
 # print whom had been received from CEO
 #printRecipients(mbox, "kenneth.lay@enron.com")
 # print whom had been received from secretary
-printRecipients(mbox, "rosalee.fleming@enron.com")
+#printRecipients(mbox, "rosalee.fleming@enron.com")
 
-printMessagesByRange(mbox)
+#printMessagesByRange(mbox)

@@ -33,7 +33,6 @@ def get_ceo_mails_content(mbox) :
     contents = [ i['parts'][0]['content'] for i in from_msgs ]
     return contents
 
-##
 # Get content of private mails in enron company
 #
 def get_private_mails_content(mbox) :
@@ -116,8 +115,9 @@ client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's d
 # Reference the mbox collection in the Enron database
 mbox = client.enron.mbox # The number of messages in the collection
 
-contents = get_private_mails_content(mbox)
+#contents = get_private_mails_content(mbox)
 contents = get_ceo_mails_content(mbox)
+
 tokens = tokenize(contents)
 #print tokens
 stemmed = get_stemmed_list(tokens)

@@ -8,6 +8,7 @@ import json
 import networkx as nx
 from networkx.readwrite import json_graph
 import pymongo # pip install pymongo
+from collections import Counter
 
 ##
 # Ranking node with page rank algorithm
@@ -44,6 +45,27 @@ def rank_nodes(graph, k=10):
     return ranks
 
 
+def get_all_senders(mbox) :
+    import re
+    query = mbox.find({ "X-To": {"$regex" : re.compile(r"^.+")} }) # find valid mail which has (a) recipient(s)
+    #query = mbox.find({})
+    all_mails = [ msg for msg in query ]
+    #print len(all_mails)
+
+    # sort all mails by sender who sent many mails
+    all_senders = [ msg["From"] for msg in all_mails ]
+    return all_senders
+
+def print_top_rank(all_senders, n):
+
+    sent_occurrences = Counter(all_senders)
+    # print top 100 senders
+    ranks = sent_occurrences.most_common(n)
+    counter = 1
+    for ranker in ranks :
+        print str(counter) + ", " + ranker[0] + ", " + str(ranker[1])
+        counter = counter + 1
+
 def writeJSONGraph(graph):
     json.dump(json_graph.node_link_data(graph), open('force.json','w'))
 
@@ -68,32 +90,22 @@ def findTopSenders(all_enron_senders, n):
                 }
 
         ])
-        all_recipients = set()
+        all_recipients = list()
         for r in results:
 
             for recipients in r["recipients"]:
                 for to in recipients :
-                    all_recipients.add(to)
+                    all_recipients.append(to)
             for recipients in r["carbone_copy"]:
                 for cc in recipients :
-                    all_recipients.add(cc)
+                    all_recipients.append(cc)
             for recipients in r["blind_carbone_copy"]:
                 for bcc in recipients :
-                    all_recipients.add(cc)
+                    all_recipients.append(cc)
 
-        # Get all recipient lists for each message
-        #recipients_per_message = mbox.aggregate([
-        #    { "$match": {"From": sender } },
-        #    {"$project": {"From": 1, "To": 1} },
-        #    {"$group": {"_id": "$From", "recipients": {"$addToSet": "$To" } } }
-        #]).next()['recipients']
-
-        # Collapse the lists of recipients into a single list
-        #all_recipients = [ recipient for message in recipients_per_message for recipient in message]
-        #print sender + " has recipients: " + str(len(all_recipients))
         sender_recipients.append({
             "id" : sender[:sender.index('@')], # extract id from email address
-            "email" : sender,
+            "sender" : sender,
             "recipients" : list(all_recipients),
             "count" : len(all_recipients)
         })
@@ -105,27 +117,35 @@ def findTopSenders(all_enron_senders, n):
 
     return selected_list
 
-
-def createEdges(top_senders):
-
+def createEdges(exchanges, nodes):
     edges = []
-    for top_sender in top_senders:
+    for exchange in exchanges:
         # count the occurrence of selected sender in recipients
-        for interested_sender in top_senders:
-            exchange_count = top_sender['recipients'].count(interested_sender['email'])
-            # skip self-received mails and no exchanges between them
-            if (top_sender['email'] is not interested_sender['email'] and exchange_count > 0):
-                #print top_sender['id'] + ":" + str(exchange_count) + ":" + interested_sender['id']
-                edges.append((top_sender['id'], exchange_count, interested_sender['id']))
+        sender = exchange['id']
+        recipients = exchange['recipients']
+        recipient_occurrences = Counter(recipients)
+
+        for key in recipient_occurrences:
+            recipient = key[:key.index('@')]
+            exchange_count = recipient_occurrences[key]
+
+            # append only if recipient is a sender
+            for node in nodes:
+                if node in recipient:
+                    print sender + ":" + str(exchange_count) + ":" + recipient
+                    edges.append((sender, exchange_count, recipient))
+                    break
+
     return edges
-
-
 
 #client = pymongo.MongoClient()
 client = pymongo.MongoClient('datascience.snu.ac.kr', 27017) # for using lab's db server
 
 # Reference the mbox collection in the Enron database
 mbox = client.enron.mbox # The number of messages in the collection
+
+all_senders = get_all_senders(mbox)
+print_top_rank(all_senders, 100)
 
 # in all senders, calculate the # of recipients for each sender
 all_enron_senders = [ i for i in mbox.distinct("From")
@@ -134,7 +154,7 @@ all_enron_senders = [ i for i in mbox.distinct("From")
 num_nodes = 50
 top_senders = findTopSenders(all_enron_senders, num_nodes)
 
-# print top 100 senders
+# print top senders
 for sender in top_senders :
     print sender['id'] + ": " + str(sender['count'])
 
@@ -143,7 +163,7 @@ graph = nx.Graph()
 rank = 1/float(num_nodes)
 
 nodes = set([sender['id'] for sender in top_senders])
-edges = createEdges(top_senders)
+edges = createEdges(top_senders, nodes)
 
 graph.add_nodes_from(nodes, rank=rank, size=10)
 
@@ -161,8 +181,7 @@ for key, node in graph.nodes(data=True):
     rank = graph.node[key]['rank']
     # below code resize the node size
     lank_score = (round(MIN_NODE_SIZE * rank * V))
-    if (lank_score >= 10) :
-        print key + ": " + str(lank_score)
+    print key + ": " + str(lank_score)
     graph.node[key]['size'] = max(round(MIN_NODE_SIZE), round(MIN_NODE_SIZE * rank * V))
 
 # create force.json for visualizing with force.html
